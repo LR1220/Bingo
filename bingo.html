@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Oculto Navideño Táctil 🎅</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Merriweather:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <style>
+        /* --- ESTILOS CSS NAVIDEÑOS Y TÁCTILES --- */
+        :root {
+            /* Color Rojo Navidad Ligeramente Más Claro para un mejor contraste del regalo */
+            --color-rojo-navidad: #e74c3c; 
+            --color-verde-navidad: #27ae60;
+            --color-dorado-navidad: #f1c40f;
+            --color-fondo-claro: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: var(--color-fondo-claro);
+            color: #2c3e50;
+            padding: 10px; 
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            color: var(--color-rojo-navidad);
+            font-size: 2.5em; 
+            text-shadow: 2px 2px var(--color-dorado-navidad);
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--color-verde-navidad);
+            margin-top: 15px;
+            font-size: 1.5em; 
+        }
+
+        #card-id {
+            font-size: 16px; 
+            margin-bottom: 20px;
+            background: var(--color-dorado-navidad);
+            color: var(--color-rojo-navidad);
+            padding: 8px 15px;
+            border-radius: 10px;
+            border: 2px solid var(--color-rojo-navidad);
+        }
+
+        #tarjeta-contenedor {
+            display: grid;
+            grid-template-columns: repeat(3, 100px); 
+            grid-template-rows: repeat(3, 100px);
+            gap: 8px; 
+            border: 8px solid var(--color-rojo-navidad);
+            background-color: var(--color-verde-navidad);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* MEDIA QUERY para pantallas más grandes (Tablets/Desktop) */
+        @media (min-width: 600px) {
+            #tarjeta-contenedor {
+                grid-template-columns: repeat(3, 120px);
+                grid-template-rows: repeat(3, 120px);
+            }
+            h1 { font-size: 3em; }
+        }
+
+        .casilla {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 12px; 
+            font-weight: bold;
+            padding: 5px;
+            position: relative;
+            user-select: none;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        /* Estado Oculto */
+        .casilla::before {
+            content: '🎁';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--color-rojo-navidad); /* ROJO MÁS CLARO */
+            color: white;
+            font-size: 35px; 
+            transition: opacity 0.5s;
+        }
+
+        /* Estado Revelado */
+        .revelada::before {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .revelada {
+            background-color: white;
+            color: #1a1a1a;
+            border: 2px solid var(--color-verde-navidad);
+        }
+        
+        /* Controles de juego (Optimización táctil) */
+        #controles {
+            width: 90%; 
+            max-width: 450px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 3px dashed var(--color-verde-navidad);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #input-palabra {
+            padding: 12px; 
+            width: 65%;
+            margin-right: 5px;
+            border: 1px solid var(--color-verde-navidad);
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        #btn-buscar {
+            padding: 12px 15px; 
+            background-color: var(--color-verde-navidad);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.2s;
+        }
+
+        #btn-buscar:hover {
+            background-color: #1e8449;
+        }
+
+        #mensaje-jugador { 
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 20px;
+            color: var(--color-rojo-navidad);
+            font-size: 1.1em;
+        }
+
+        .bingo-alcanzado {
+            color: var(--color-rojo-navidad);
+            font-size: 26px; 
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎅 ¡Bingo Navideño en Familia! 🎄</h1>
+    
+    <div id="card-id">Tu Tarjeta ID: <span id="tarjeta-id-valor"></span></div>
+    
+    <div id="controles">
+        <p>Introduce el nombre de la pelicula:</p>
+        <input type="text" id="input-palabra" placeholder="Ej: La respuesta de la mímica">
+        <button id="btn-buscar">Buscar Palabra</button>
+        <div id="mensaje-jugador"></div>
+    </div>
+    
+        <div id="tarjeta-contenedor">
+        </div>
+
+    <script>
+        // --- LÓGICA JAVASCRIPT ---
+
+        const PALABRAS_TOTALES = [
+            "It (eso)", "Piratas del Caribe", "Cenicienta", "Blancanieves", "Harry Potter", 
+            "Titanic", "Shrek", "Gladiador", "Tarzan", "Buscando a Nemo", 
+            "Ironman", "El rey Leon", "Matrix", "El jorobado de Notre-Dame", "Hombres de Negro"
+        ];
+        
+        const CASILLAS_REQUERIDAS = 9; 
+
+        const TARJETAS_PREDEFINIDAS = []; 
+        let tarjetaActual = [];
+        let casillasReveladas = 0;
+
+        const contenedor = document.getElementById('tarjeta-contenedor');
+        const inputPalabra = document.getElementById('input-palabra');
+        const btnBuscar = document.getElementById('btn-buscar');
+        const mensajeJugadorDiv = document.getElementById('mensaje-jugador');
+        const tarjetaIdSpan = document.getElementById('tarjeta-id-valor');
+        
+        // --- INICIO: FUNCIONES DE AUDIO GENERADO Y VIBRACIÓN ---
+        
+        // Inicializa el AudioContext una vez
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx; 
+
+        // Genera un tono simple
+        function tocarTono(frecuencia, duracion, tipo) {
+            // Se debe inicializar el contexto de audio después de una interacción del usuario
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            // Tipos de onda para variar el sonido
+            const wave = tipo === 'bingo' ? 'sine' : (tipo === 'correcto' ? 'square' : 'sawtooth');
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            // Ajustes
+            oscillator.type = wave;
+            oscillator.frequency.setValueAtTime(frecuencia, audioCtx.currentTime);
+            
+            // Simple rampa de volumen para evitar chasquidos (fade out)
+            gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duracion / 1000);
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duracion / 1000);
+        }
+        
+        // Función de vibración universal
+        function vibrar(patron) {
+            if (navigator.vibrate) {
+                // El patrón es un array de milisegundos [vibrar, pausar, vibrar, ...]
+                navigator.vibrate(patron);
+            }
+        }
+        
+        // Centraliza la lógica de feedback
+        function manejarResultado(tipo) {
+            switch (tipo) {
+                case 'correcto':
+                    tocarTono(880, 150, 'correcto'); // Nota alta, corta
+                    vibrar(100); 
+                    break;
+                case 'incorrecto':
+                    tocarTono(220, 300, 'incorrecto'); // Nota baja, resonante
+                    vibrar([50, 50, 50]);
+                    break;
+                case 'ya_revelada':
+                    tocarTono(440, 200, 'incorrecto'); // Nota media
+                    vibrar(200); 
+                    break;
+                case 'bingo':
+                    tocarTono(1200, 800, 'bingo'); // Nota muy alta, larga
+                    vibrar([500, 100, 500]);
+                    break;
+            }
+        }
+
+        // --- FIN: FUNCIONES DE AUDIO GENERADO Y VIBRACIÓN ---
+
+
+        // --- FUNCIÓN DE CONFETI (sin cambios) ---
+        function lanzarConfeti() {
+            const coloresNavidad = ['#c0392b', '#27ae60', '#f1c40f']; 
+            
+            confetti({
+                particleCount: 150,
+                spread: 90,
+                origin: { y: 0.6 },
+                colors: coloresNavidad,
+                startVelocity: 40,
+                scalar: 0.9,
+                ticks: 300
+            });
+            
+             confetti({
+                particleCount: 100,
+                spread: 120,
+                origin: { y: 0.4 },
+                colors: coloresNavidad,
+                startVelocity: 50,
+                scalar: 0.7,
+                ticks: 200
+            });
+
+             setTimeout(() => {
+                confetti({
+                    particleCount: 75,
+                    spread: 80,
+                    origin: { y: 0.7 },
+                    colors: coloresNavidad,
+                    startVelocity: 35,
+                    scalar: 0.8,
+                    ticks: 150
+                });
+             }, 500);
+        }
+
+        // Funciones auxiliares (sin cambios)
+        function mezclarArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function generarTarjetaID(index) {
+            return `NAV-T${String(index + 1).padStart(2, '0')}`;
+        }
+        
+        function preGenerarTarjetas() {
+            for (let i = 0; i < 12; i++) {
+                const palabrasMezcladas = mezclarArray([...PALABRAS_TOTALES]);
+                const tarjetaCompleta = palabrasMezcladas.slice(0, CASILLAS_REQUERIDAS);
+                TARJETAS_PREDEFINIDAS.push(tarjetaCompleta);
+            }
+        }
+
+        function asignarTarjeta() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let indiceJugador = urlParams.get('jugador');
+            let indice = 0; 
+
+            if (indiceJugador !== null) {
+                const num = parseInt(indiceJugador);
+                if (!isNaN(num) && num >= 1 && num <= 12) {
+                    indice = num - 1; 
+                } else {
+                    mensajeJugadorDiv.textContent = `Advertencia: ID de jugador (${indiceJugador}) inválido. Usando Tarjeta 1.`;
+                }
+            } else {
+                 indice = Math.floor(Math.random() * TARJETAS_PREDEFINIDAS.length);
+            }
+
+            tarjetaActual = TARJETAS_PREDEFINIDAS[indice];
+            
+            const id = generarTarjetaID(indice); 
+            tarjetaIdSpan.textContent = id;
+            
+            renderizarTarjeta(tarjetaActual);
+        }
+
+        function renderizarTarjeta(palabras) {
+            contenedor.innerHTML = '';
+            casillasReveladas = 0; 
+            if (window.location.search.includes('jugador=')) {
+                 mensajeJugadorDiv.textContent = '';
+            }
+            btnBuscar.disabled = false;
+            inputPalabra.disabled = false;
+
+            palabras.forEach((palabra, index) => {
+                const casilla = document.createElement('div');
+                casilla.classList.add('casilla');
+                casilla.dataset.index = index;
+                casilla.dataset.palabra = palabra.toLowerCase().trim(); 
+                casilla.innerHTML = `<span>${palabra}</span>`;
+                contenedor.appendChild(casilla);
+            });
+        }
+        
+        function verificarBingo() {
+            if (casillasReveladas < 3) return false;
+
+            const casillas = Array.from(document.querySelectorAll('.casilla'));
+            const esRevelada = (i) => casillas[i] && casillas[i].classList.contains('revelada');
+            
+            const patronesGanadores = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+                [0, 4, 8], [2, 4, 6]            
+            ];
+
+            return patronesGanadores.some(patron => {
+                return patron.every(esRevelada);
+            });
+        }
+
+        // 4. LÓGICA DE BÚSQUEDA Y REVELACIÓN (Modificada para usar manejarResultado)
+        function buscarYRevelar() {
+            // Intentar inicializar el contexto de audio aquí para mayor compatibilidad
+            if (!audioCtx) {
+                audioCtx = new AudioContext();
+            }
+            
+            const palabraBusqueda = inputPalabra.value.toLowerCase().trim();
+            inputPalabra.value = ''; 
+
+            if (!palabraBusqueda) {
+                mensajeJugadorDiv.textContent = "¡Por favor, escribe la respuesta adivinada!";
+                return;
+            }
+
+            let encontrada = false;
+            let yaRevelada = false;
+            
+            document.querySelectorAll('.casilla').forEach(casilla => {
+                if (casilla.dataset.palabra === palabraBusqueda) {
+                    encontrada = true;
+                    if (casilla.classList.contains('revelada')) {
+                        yaRevelada = true;
+                    } else {
+                        casilla.classList.add('revelada');
+                        casillasReveladas++;
+                        
+                        if (verificarBingo()) {
+                            mensajeJugadorDiv.innerHTML = `¡"${palabraBusqueda}" ENCONTRADA! <br><span class="bingo-alcanzado">🎉 ¡BINGO! ¡GANADOR! 🎉</span>`;
+                            btnBuscar.disabled = true;
+                            inputPalabra.disabled = true;
+                            lanzarConfeti(); 
+                            manejarResultado('bingo'); // Sonido y vibración de BINGO
+                        } else {
+                            mensajeJugadorDiv.textContent = `¡"${palabraBusqueda}" ENCONTRADA! Sigue buscando tu línea de 3.`;
+                            manejarResultado('correcto'); // Sonido y vibración de acierto
+                        }
+                    }
+                }
+            });
+
+            if (!encontrada) {
+                mensajeJugadorDiv.textContent = `"${palabraBusqueda}" NO está en tu cartón.`;
+                manejarResultado('incorrecto'); // Sonido y vibración de error
+            } else if (yaRevelada) {
+                 mensajeJugadorDiv.textContent = `¡"${palabraBusqueda}" ya había sido revelada!`;
+                 manejarResultado('ya_revelada'); // Sonido y vibración de ya revelada
+            }
+        }
+
+        // EVENT LISTENERS
+        btnBuscar.addEventListener('click', buscarYRevelar);
+        inputPalabra.addEventListener('keyup', function(e) { 
+            if (e.key === 'Enter') {
+                buscarYRevelar();
+            }
+        });
+
+        // INICIALIZAR EL JUEGO
+        window.onload = function() {
+            preGenerarTarjetas();
+            asignarTarjeta();
+        };
+
+    </script>
+</body>
+</html>
