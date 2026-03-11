@@ -1,0 +1,248 @@
+import React from 'react';
+import { 
+  AlertTriangle, 
+  QrCode, 
+  ShieldAlert, 
+  Waves, 
+  SprayCan, 
+  Zap, 
+  HandMetal,
+  Droplets,
+  CheckCircle2,
+  Info,
+  Calculator,
+  Beaker,
+  Tag,
+  Trash2,
+  Clock,
+  Search,
+  Phone,
+  Layers,
+  Target,
+  ArrowRight,
+  Sun
+} from 'lucide-react';
+
+const App = () => {
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 p-4 md:p-8">
+      {/* TÍTULO PRINCIPAL */}
+      <header className="max-w-6xl mx-auto text-center mb-10">
+        <h1 className="text-4xl font-black text-blue-900 uppercase tracking-tight mb-2">
+          Seguridad en la preparación de medicamentos
+        </h1>
+        <div className="h-1.5 w-24 bg-blue-600 mx-auto rounded-full"></div>
+        <p className="mt-4 text-slate-500 font-bold uppercase text-xs tracking-[0.3em]">
+          Protocolo Institucional de Enfermería y Farmacia
+        </p>
+      </header>
+
+      <main className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        {/* COLUMNA 1: TÉCNICA ASÉPTICA Y CÁLCULOS */}
+        <div className="lg:col-span-2 space-y-6">
+          
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-blue-900 p-4 flex items-center gap-3">
+              <Waves className="text-blue-300" size={24} />
+              <h2 className="text-white font-black uppercase text-sm tracking-wider">Técnica Aséptica y Desinfección</h2>
+            </div>
+            
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 text-blue-700">
+                    <HandMetal size={20} />
+                    <h3 className="font-black text-xs uppercase">1. Higiene de Manos</h3>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
+                    Lavado clínico obligatorio antes de manipular insumos. Elimina flora transitoria.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 text-emerald-600">
+                    <CheckCircle2 size={20} />
+                    <h3 className="font-black text-xs uppercase">2. Guantes sin talco</h3>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
+                    Uso obligatorio para toda manipulación. Protege la mezcla y al personal.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 text-emerald-600">
+                    <SprayCan size={20} />
+                    <h3 className="font-black text-xs uppercase">3. Superficies</h3>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed font-medium">
+                    Desinfectar con <strong>alcohol al 70%</strong> antes de disponer los insumos.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                <div className="flex items-center gap-3 mb-3 text-blue-800">
+                  <Droplets size={22} />
+                  <h3 className="font-black text-sm uppercase">Limpieza de Viales y Ampollas</h3>
+                </div>
+                <p className="text-xs text-slate-700 leading-relaxed">
+                  Utilizar un <strong>pañín</strong> impregnado con alcohol al 70%. Realizar técnica de <strong>fricción mecánica</strong> sobre el tapón de caucho o el cuello de la ampolla antes de la apertura o inserción de la aguja.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* EXPLICACIÓN DE CÁLCULOS */}
+          <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-slate-800 p-4 flex items-center gap-3">
+              <Calculator className="text-blue-400" size={24} />
+              <h2 className="text-white font-black uppercase text-sm tracking-wider">Cálculo de Concentración y Dosis</h2>
+            </div>
+            <div className="p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <p className="text-[10px] font-black text-slate-400 uppercase mb-2">Fórmula de Concentración</p>
+                    <div className="text-lg font-black text-slate-800 text-center flex flex-col items-center">
+                      <span>Cantidad (mg)</span>
+                      <div className="w-24 h-0.5 bg-slate-300 my-1"></div>
+                      <span>Volumen (mL)</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100">
+                    <p className="text-[10px] font-black text-blue-400 uppercase mb-2">Fórmula de Dosis</p>
+                    <div className="text-lg font-black text-blue-900 text-center flex flex-col items-center">
+                      <span>Dosis Ordenada (mg)</span>
+                      <div className="w-24 h-0.5 bg-blue-300 my-1"></div>
+                      <span>Concentración (mg/mL)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* COLUMNA 2: MATRIZ Y PUNTOS CRÍTICOS */}
+        <div className="space-y-6">
+          
+          {/* FLUJO DE CONSULTA Y SOPORTE */}
+          <div className="bg-white rounded-3xl shadow-xl border border-blue-200 overflow-hidden">
+            <div className="bg-blue-900 p-5 text-white">
+              <div className="flex items-center gap-3 mb-2">
+                <QrCode size={28} className="text-blue-300" />
+                <h2 className="font-black uppercase text-xs tracking-widest leading-none">
+                  1. Primer Paso: Matriz de Riesgo
+                </h2>
+              </div>
+              <p className="text-[10px] font-bold text-blue-100 mb-3">Consulte obligatoriamente el código QR para:</p>
+              
+              <div className="space-y-1.5">
+                <div className="bg-blue-800/50 p-2 rounded-lg flex items-center gap-2 text-[9px] font-black uppercase">
+                  <Search size={14} className="text-blue-300 shrink-0" /> Concentraciones y Dilución
+                </div>
+                <div className="bg-blue-800/50 p-2 rounded-lg flex items-center gap-2 text-[9px] font-black uppercase">
+                  <Layers size={14} className="text-blue-300 shrink-0" /> Salina con Adaptador
+                </div>
+                <div className="bg-blue-800/50 p-2 rounded-lg flex items-center gap-2 text-[9px] font-black uppercase">
+                  <Clock size={14} className="text-blue-300 shrink-0" /> Estabilidad en Unidades de Enfermería
+                </div>
+                <div className="bg-blue-800/50 p-2 rounded-lg flex items-center gap-2 text-[9px] font-black uppercase">
+                  <Sun size={14} className="text-blue-300 shrink-0" /> Fotosensibilidad
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-5 bg-emerald-50 border-t border-blue-100">
+              <div className="flex items-center gap-2 mb-3">
+                <ArrowRight size={16} className="text-blue-500" />
+                <h3 className="font-black uppercase text-[10px] text-blue-900 italic">¿No está en la matriz o persisten dudas?</h3>
+              </div>
+              
+              <div className="bg-white p-3 rounded-2xl border border-emerald-200 shadow-sm flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Phone size={24} className="text-emerald-600" />
+                  <div>
+                    <p className="font-black text-emerald-900 text-xs uppercase leading-none">Central Mezclas</p>
+                    <p className="text-[9px] text-emerald-600 font-bold uppercase mt-1 tracking-widest">Extensión 3156</p>
+                  </div>
+                </div>
+              </div>
+              
+              <p className="mt-3 text-[9px] text-slate-600 leading-tight font-medium bg-white/50 p-2 rounded-lg border border-emerald-100">
+                Llamar para informar oportunamente el <strong>cambio o suspensión</strong> de medicamentos preparados por Central de Mezclas.
+              </p>
+            </div>
+          </div>
+
+          {/* PUNTOS CRÍTICOS */}
+          <div className="bg-white rounded-3xl shadow-md border border-red-100 overflow-hidden">
+            <div className="bg-red-700 p-4 flex items-center gap-3">
+              <Zap className="text-red-200" size={20} />
+              <h2 className="text-white font-black uppercase text-sm tracking-wider">Puntos Críticos</h2>
+            </div>
+            <div className="p-5 space-y-4">
+              <div className="p-3 bg-red-50 rounded-xl border border-red-100">
+                <div className="flex items-center gap-2 mb-1">
+                  <ShieldAlert size={16} className="text-red-600" />
+                  <h4 className="text-[10px] font-black text-red-700 uppercase leading-none">Solo un medicamento a la vez</h4>
+                </div>
+                <p className="text-[10px] text-slate-600 font-bold leading-tight">
+                  Previene confusiones y errores. Procure evitar interrupciones durante la preparación.
+                </p>
+              </div>
+
+              <div className="p-3 bg-blue-50 rounded-xl border border-blue-100">
+                <div className="flex items-center gap-2 mb-1">
+                  <Target size={16} className="text-blue-600" />
+                  <h4 className="text-[10px] font-black text-blue-700 uppercase leading-none">Uso de Jeringas</h4>
+                </div>
+                <p className="text-[10px] text-slate-600 font-bold leading-tight">
+                  Al eliminar aire, cubrir la <strong>aguja</strong> para reducir exposición. Usar la jeringa más cercana al volumen requerido para mayor precisión.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3 px-1">
+                <Tag className="text-blue-600 shrink-0" size={16} />
+                <p className="text-[10px] text-slate-600 font-bold">Rotular <strong>inmediatamente</strong> tras la preparación.</p>
+              </div>
+
+              <div className="flex items-start gap-3 px-1 border-t border-slate-100 pt-3">
+                <Trash2 className="text-slate-400 shrink-0" size={16} />
+                <p className="text-[10px] text-slate-500 font-bold italic">Descartar remanentes según plan de residuos.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ALERTAS VISUALES */}
+          <div className="bg-orange-600 rounded-3xl p-5 text-white shadow-lg">
+             <div className="flex items-center gap-2 mb-3">
+               <AlertTriangle size={20} className="text-orange-200" />
+               <h3 className="font-black text-[10px] uppercase tracking-widest italic leading-none">Detenga la Administración si:</h3>
+             </div>
+             <ul className="text-[10px] space-y-1 font-black">
+               <li>• Cambio de color</li>
+               <li>• Turbidez visible</li>
+               <li>• Precipitado o Cristales</li>
+             </ul>
+          </div>
+
+        </div>
+      </main>
+
+      <footer className="max-w-6xl mx-auto mt-12 pt-6 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">
+          Christus Sinergia | Seguridad del Paciente
+        </p>
+        <div className="flex gap-6 text-[9px] font-black text-blue-900 uppercase italic">
+          <span className="flex items-center gap-1"><CheckCircle2 size={12}/> Verificación de 5 Correctos</span>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
